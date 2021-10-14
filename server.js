@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require('express')
 const app = express()
 const path = require('path')
@@ -14,20 +15,59 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false}))
 
 //session
-// app.use(session({
-//     secret: process.env.SECRET ,
-//     resave: true ,
-//     saveUninitialized:true,
-// }))
+app.use(session({
+    secret: process.env.SECRET ,
+    resave: true ,
+    saveUninitialized:true,
+}))
+
+//dbconnect
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => console.log("DB connected"))
+  .catch(error => console.log(error))
+
+//image storage
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, './public/uploads');
+    },
+    filename: function(req, file, cb) {
+      cb(null, Date.now() + file.originalname);
+    }
+  });
+
+const upload = multer({ storage: storage });
 
 //ejs
 app.set("view-engine" , "ejs")
 
 //signup get
 app.get("/" , (req , res) =>{
-    res.send("hello")
+    res.render("index.ejs")
 })
 
+//logout
+app.get("/logout", (req , res) => {
+    req.session.destroy()
+    res.redirect("/")
+})
+
+//middleware
+function checkauthentication(req, res, next) {
+    if(req.session.user){
+        return next()
+    }else {
+        res.redirect("/")
+    }
+}
+
+//logout
+app.post("/logout", (req, res) => {
+    req.session.destroy()
+    res.redirect("/")
+})
 
 //listening on port
 
