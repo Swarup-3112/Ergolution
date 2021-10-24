@@ -7,12 +7,17 @@ const mongoose = require("mongoose")
 const session = require("express-session")
 const bcrypt = require("bcrypt");
 const multer = require('multer');
+const bodyParser = require('body-parser'); 
 
 //middleware
 app.use(express.static(path.join(__dirname, "public")))
 app.use(logger("dev"))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}))
+app.use(bodyParser.urlencoded({
+    extended: true
+})); 
+
 
 //models
 const User = require("./models/user")
@@ -49,10 +54,11 @@ const upload = multer({ storage: storage });
 //ejs
 app.set("view-engine" , "ejs")
 
-//signup get
-app.get("/" , (req , res) =>{
-    let message= null;
-    res.render("signup.ejs" ,{ message: message })
+
+//login get
+app.get("/" , (req,res) => {
+    let message = null
+    res.render("ergolutionlogin.ejs" ,{ message: message })
 })
 
 //signup post
@@ -65,41 +71,36 @@ app.post("/signup" , async (req,res) => {
                 password : hashedPassword,
             })
             await user.save();
-            res.redirect("/login")
+            res.redirect("/home")
         } catch{
             res.redirect("/")
         }  
 })
 
-//loginget
-app.get("/login" , (req,res) => {
-    let message = null
-    res.render("login.ejs" ,{ message: message })
-})
-
 //login post
 app.post("/signin" , async (req, res) =>{
     await User.find({email: req.body.email}).then(data => {
-        console.log(data)
         if(data == undefined){
             const message = "invalid username or password"
-            res.render("login.ejs" , { message: message })   
+            res.render("ergolutionlogin.ejs" , { message: message })   
         }
+        console.log(data)
         const verified = bcrypt.compareSync(req.body.password, data[0].password);
         console.log(data[0].role)
         if(verified){
             if(data[0].role == "admin"){
                 req.session.user = data[0]
-                res.redirect("/adminpanel") 
+                res.redirect("/admin") 
             }
             else{
                 req.session.user = data[0]
+                console.log(req.session.user , "heheheheh")
                 res.redirect("/home")
             }
         }
         else{
             const message = "invalid username or password"
-            res.render("login.ejs" , { message: message }) 
+            res.render("ergolutionlogin.ejs" , { message: message }) 
         }
     }).catch(e =>{
         console.log(e)
@@ -112,17 +113,32 @@ app.post("/signin" , async (req, res) =>{
 app.get("/home" , async (req , res) =>{
     const latest = await Product.find().sort({ _id: -1 }).limit(8)
     const feature = await Product.find().limit(8)
+    const order = await Order.find({userid: req.session.user._id})
+    let count = 0
+    for(i in order)
+    {
+        count++
+    }
     res.render("index2.ejs" , {
         latests : latest ,
-        features : feature
+        features : feature,
+        count,
     })
 })
 
+
 //product page
 app.get("/products", async (req , res) => { 
+    const order = await Order.find({userid: req.session.user._id})
+    let count = 0
+    for(i in order)
+    {
+        count++
+    }
     await Product.find().then(product =>{
         res.render("products.ejs" , {
             products: product,
+            count,
         })  
     })
 })
@@ -132,10 +148,17 @@ app.get("/productdetail/:id", async (req , res) => {
     try{
     const product = await Product.findById(req.params.id) 
     const related = await (await Product.find({type : product.type , _id: { $ne: req.params.id }}).limit(4))
+    const order = await Order.find({userid: req.session.user._id})
+    let count = 0
+    for(i in order)
+    {
+        count++
+    }
     console.log(related)
         res.render("productDetails.ejs" , {
             products: product,
             related_products: related,
+            count
         })  
     } catch (error){
         console.log(error)
@@ -145,37 +168,54 @@ app.get("/productdetail/:id", async (req , res) => {
 
 //add to cart
 app.post("/additem/:id" , upload.single('image'), async (req , res) => {
-    await Product.findById(req.params.id).then(data => {
+    console.log("hello")
+    console.log(req.session.user)
+    try{ await Product.findById(req.params.id).then(data => {
+        let quantity 
+        if(req.body.quantity == null){
+            quantity = 1
+        }else{
+            quantity = req.body.quantity
+        }
+        
         try{
             const item = new Order({ 
                 userid: req.session.user._id, 
                 name: data.name,
                 price: data.price,
                 image: data.image,
-                qty: req.body.root,
+                qty: quantity
             })
+            console.log(item)
             item.save();
             res.redirect("/products")
     } catch (error){
         console.log(error)
-        res.send("error")
+        res.send(error)
     } 
-  })
+  })} catch (e){
+      res.send(e)
+  }
 })
+
 
 //cart page
 app.get("/cart", async (req , res) => {  
     await Order.find({userid: req.session.user._id }).then(order =>{
-        let totalvalue=0
+        let subtotal=0
         for(i in order){
            let value = order[i].qty * order[i].price
-           totalvalue +=value
+           subtotal += value
         }
+        let tax = 0.05 * subtotal;
+        let totalvalue = subtotal + tax
         console.log(totalvalue)
         res.render("cart.ejs" , {
-            // orders: order,
-            // name: req.session.user.name,
-            // total: totalvalue
+            orders: order,
+            name: req.session.user.name,
+            subtotal,
+            tax,
+            total: totalvalue
         })  
     }).catch(error => {
         console.log(error)
@@ -199,13 +239,21 @@ app.post("/delete/:id", async (req , res) =>{
 // ------------------------ admin side ------------------------------ 
 
 //admin page
-app.get("/admin", (req , res) => {  
-    res.render("index2.ejs")  
+app.get("/admin", async (req , res) => {  
+    await Product.find({seller: req.session.user.name}).then(product =>{
+        console.log(product)
+        res.render("adminpanel.ejs" , {
+            products: product,
+            username: req.session.user.name,
+        })  
+    })
 })
 
 //admin add product
 app.get("/addproduct", (req , res) => {  
-    res.render("add.ejs")  
+    res.render("add.ejs" ,{
+        username: req.session.user.name,
+    })  
 })
 
 //admin post
@@ -227,12 +275,13 @@ app.post('/add', upload.single('image'), async (req, res, next) => {
     }    
 })
 
-//edit food Get
-app.get("/edititem" , async (req, res) =>{
+//edit product Get
+app.get("/edititem/:id" , async (req, res) =>{
     await Product.findById(req.params.id).then( data => {
          console.log(data)
          res.render("update.ejs" , {
-         product: data
+         product: data,
+         username: req.session.user.name,
             })  
         }).catch( e =>{
         console.log(e)
@@ -240,9 +289,9 @@ app.get("/edititem" , async (req, res) =>{
     })
 })
 
-//edit food post
+//edit product post
 app.post("/update/:id" , async(req , res) =>{
-    await Food.findOneAndUpdate({_id: req.params.id}, {
+    await Product.findOneAndUpdate({_id: req.params.id}, {
         $set: {
             name: req.body.name,
             price: req.body.price,
@@ -253,6 +302,18 @@ app.post("/update/:id" , async(req , res) =>{
             res.redirect("/index2")   //admin-menu-page
         }else{
             res.send("error")
+        }
+    }).catch(e => {
+        res.send(e)
+    })
+})
+
+//delete product
+app.post("/delete/:id" ,async (req , res) =>{
+    await Movie.findByIdAndDelete({_id: req.params.id}).then(result =>{
+        if(result){
+            console.log(result)
+            res.redirect("/adminpanel")
         }
     }).catch(e => {
         res.send(e)

@@ -47,7 +47,7 @@
   }
   
   .container {
-    max-width: 114rem;
+    max-width: 140rem;
     margin: 0 auto;
   }
 
@@ -101,6 +101,11 @@
   
   .wrapper .logo {
     height: 100%;
+  }
+
+  .logo a img {
+    height: 80px;
+    width: auto;
   }
   
   .wrapper .logo a {
@@ -249,6 +254,16 @@
     display: inline-block;
   }
   
+  .icons{
+    display: flex;
+    justify-content: center;
+  }
+
+  .icons a i {
+    color: #000;
+    font-size: 16px;
+  }
+
   .nav-list .icons .count {
     justify-content: center;
     position: absolute;
@@ -397,6 +412,10 @@
   
     .nav-list .icons {
       padding-left: 2rem;
+    }
+
+    .icons{
+      flex-direction: column;
     }
   }
   
@@ -1023,6 +1042,7 @@
   .cart-info {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
   }
   
   .cart-info span {
@@ -1273,7 +1293,6 @@
   
   .products-layout {
     display: grid;
-    grid-template-columns: 1.05fr 3fr;
     gap: 0 1rem;
   }
   

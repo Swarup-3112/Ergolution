@@ -16,7 +16,7 @@
   
   <nav class="nav">
     <div class="wrapper container">
-      <div class="logo"><a href="">
+      <div class="logo"><a href="/admin">
         <img src="./images/logo.png" alt="">
       </a>
       </div>
@@ -24,16 +24,14 @@
         <div class="top">
           <label for="" class="btn close-btn"><i class="fas fa-times"></i></label>
         </div>
-        <li><a href="/home">Home</a></li>
-        <li class="icons">
-          <a href="/cart">
-            <span>
-            <img src="./images/shoppingBag.svg" alt="" />
-            <small class="count d-flex"><%= count %></small>
-          </span>
-          </a>
-          <a href="/logout"><i class="fas fa-sign-out-alt"></i></a>
-        </li>
+        <li><a href="/addproduct">Add Products</a></li>
+        <li>
+            <a href="" class="desktop-item"><%= username %></a>
+            <label for="showdrop1" class="mobile-item"></label>
+            <ul class="drop-menu1">
+              <li><a href="/logout">Logout   <span><i class="fas fa-sign-out-alt"></i></span></a></li>
+            </ul>
+          </li>
       </ul>
       <label for="" class="btn open-btn"><i class="fas fa-bars"></i></label>
     </div>
@@ -44,50 +42,26 @@
   <section class="section products">
     <div class="products-layout container">
       <div class="col-3">
-        <!-- <form action="">
-          <div class="item">
-            <label for="sort-by">Sort By</label>
-            <select name="sort-by" id="sort-by">
-              <option value="title" selected="selected">Name</option>
-              <option value="number">Price</option>
-              <option value="search_api_relevance">Relevance</option>
-              <option value="created">Newness</option>
-            </select>
-          </div>
-          <div class="item">
-            <label for="order-by">Order</label>
-            <select name="order-by" id="sort-by">
-              <option value="ASC" selected="selected">ASC</option>
-              <option value="DESC">DESC</option>
-            </select>
-          </div>
-          <a href="">Apply</a>
-        </form> -->
-
         <div class="product-layout">
 
           <% products.forEach(product => {  %>
               <div class="product">
-                <form action="/additem/<%= product._id %>" method="POST">
                 <div class="img-container">
                   <img src="./uploads/<%= product.image %>" alt="" />
                   <div class="addCart">
-                   <button type="submit">
-                    <i class="fas fa-shopping-cart"></i>
-                  </button>
+                    <a href="/edititem/<%= product._id %>">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
                   </div>
                 </div>
                 <div class="bottom">
-                  <a href="/productdetail/<%= product.id %>"><%= product.name %></a>
+                  <a><%= product.name %></a>
                   <div class="price">
                     <span>₹<%= product.price %></span>
                   </div>
                 </div>
-              </form>
               </div>
             <% }) %>   
-
-
         </div>
 
         <!-- PAGINATION -->

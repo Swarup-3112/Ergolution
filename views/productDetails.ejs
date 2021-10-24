@@ -20,7 +20,7 @@
   <nav class="nav">
     <div class="wrapper container">
       <div class="logo"><a href="">
-        <img src="./images/logo.png" alt="">
+        <img src="/./images/logo.png" alt="">
       </a>
       </div>
       <ul class="nav-list">
@@ -29,14 +29,12 @@
         </div>
         <li><a href="/home">Home</a></li>
         <li><a href="/products">Products</a></li>
-        <li><a href="">Blog</a></li>
-        <li><a href="" class="desktop-item">Vendors</a></li>
         <!-- icons -->
         <li class="icons">
           <a href="/cart">
             <span>
-            <img src="./images/shoppingBag.svg" alt="" />
-            <small class="count d-flex">0</small>
+            <img src="/./images/shoppingBag.svg" alt="" />
+            <small class="count d-flex"><%= count %></small>
           </span>
           </a>
           <span><img src="./images/search.svg" alt="" /></span>
@@ -60,14 +58,14 @@
           <div class="price">$<%= products.price %></div>
           <p class="price">Seller: <%= products.seller %></p>
         </div> 
-        <form class="form">
+        <form class="form" action="/additem/<%= products._id %>" method="POST">
           <!-- <input type="text" placeholder="1" /> -->
      
             <button type="button" onclick="decrement(event)" href="">-</button>
-            <input type="text" class="number"  name="root" value="0"></input>
+            <input type="text" class="number"  name="quantity" value="1"  min="1" ></input>
             <button type="button" onclick="increment(event)" href="">+</button>
     
-          <a href="cart.html" class="addCart">Add To Cart</a>
+          <button type="submit" class="addCart">Add To Cart</button>
         </form>
         <h3>Product Detail</h3>
         <p>
@@ -87,7 +85,7 @@
     <div class="product-layout container">
       <%  related_products.forEach(product => {  %>
         <div class="product">
-          <form action="/additem/" method="POST">
+          <form action="/additem/<%= product._id %>" method="POST">
           <div class="img-container">
             <img src="/uploads/<%= product.image %>" alt="" />
             <div class="addCart">
