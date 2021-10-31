@@ -22,6 +22,8 @@ a{
     cursor: pointer;
 } */
 
+
+
 :focus{
     outline: none;
 }
@@ -98,10 +100,7 @@ input{
 /* -------------button--------------- */
 
 
-
-
 .button{
-    display: flex;
     justify-content: center;
     font-size: 2rem;
     padding: 1rem 2.5rem;

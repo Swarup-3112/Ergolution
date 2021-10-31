@@ -1031,7 +1031,8 @@
   
   /* Cart Page */
   .cart {
-    margin: 20rem auto;
+    max-width: 110rem;
+    margin: 15rem auto;
   }
   
   table {
@@ -1441,6 +1442,27 @@
       grid-template-columns: 1fr;
       gap: 4rem 0;
     }
+  }
+
+  .remove{
+    cursor: pointer;
+    color: #69ae14;
+    margin-top: 5px;
+  }
+
+  .order-name{
+    margin-bottom: 3px;
+    font-size: 20px;
+  }
+
+  .cart-user{
+    font-size: 25px;
+    /* margin-bottom: 5px; */
+  }
+
+  .cart-subtitle{
+    color: #828282;
+    margin-bottom: 10px;
   }
   
   

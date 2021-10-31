@@ -184,6 +184,10 @@ a{
 	background-color: white;
 }
 
+.warning{
+    color: red;
+}
+
 .social{
     margin-bottom: 20px;
 }

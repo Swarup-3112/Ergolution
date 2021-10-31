@@ -13,7 +13,7 @@
 
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="css/common.css" />
-    <title>Codevo - Ecommerce Website</title>
+    <title>Ergolution</title>
   </head>
 
   <body>
@@ -33,7 +33,7 @@
           <li><a href="/products">Products</a></li>
           <!-- icons -->
           <li class="icons">
-            <span><img src="./images/search.svg" alt="" /></span>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i></a>
           </li>
         </ul>
         <label for="" class="btn open-btn"><i class="fas fa-bars"></i></label>
@@ -42,6 +42,8 @@
 
     <!-- Cart Items -->
     <div class="container cart">
+      <h1 class="cart-user">Welcome  <%= name %>! </h1>
+      <p class="cart-subtitle">Verify your items and proceed to checkout</p>
       <table>
         <tr>
           <th>Product</th>
@@ -54,11 +56,11 @@
             <div class="cart-info">
               <img src="./uploads/<%= order.image %>" alt="" />
               <div>
-                <p><%= order.name %></p>
+                <p class="order-name"><%= order.name %></p>
                 <span>Price: <%= order.price %></span>
                 <br />
                 <form action="/delete/<%= order._id %>" method="post">
-                <button type="submit" >remove</button>
+                <button type="submit" class="remove">remove</button>
                 </form>
               </div>
             </div>
@@ -76,7 +78,7 @@
             <td>₹<%= subtotal %></td>
           </tr>
           <tr>
-            <td>Tax</td>
+            <td>Service Charge</td>
             <td>₹<%= tax %></td>
           </tr>
           <tr>

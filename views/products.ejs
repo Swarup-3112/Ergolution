@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" href="./images/favicon.png" type="image/png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="/css/common.css" />
   <title>Codevo - Ecommerce Website</title>
 </head>
 
@@ -17,7 +17,7 @@
   <nav class="nav">
     <div class="wrapper container">
       <div class="logo"><a href="">
-        <img src="./images/logo.png" alt="">
+        <img src="/./images/logo.png" alt="">
       </a>
       </div>
       <ul class="nav-list">
@@ -28,7 +28,7 @@
         <li class="icons">
           <a href="/cart">
             <span>
-            <img src="./images/shoppingBag.svg" alt="" />
+            <img src="/./images/shoppingBag.svg" alt="" />
             <small class="count d-flex"><%= count %></small>
           </span>
           </a>
@@ -70,7 +70,7 @@
               <div class="product">
                 <form action="/additem/<%= product._id %>" method="POST">
                 <div class="img-container">
-                  <img src="./uploads/<%= product.image %>" alt="" />
+                  <img src="/./uploads/<%= product.image %>" alt="" />
                   <div class="addCart">
                    <button type="submit">
                     <i class="fas fa-shopping-cart"></i>

@@ -109,15 +109,16 @@
         <img src="./images/utility.png" alt="" />
         <div class="promotion-content">
           <h3>UTILITY</h3>
-          <a href="">SHOP NOW</a>
+          <a href="/products/Utility">SHOP NOW</a>
         </div>
       </div>
+   
 
       <div class="promotion-item">
         <img src="./images/kits.jpg" alt="" />
         <div class="promotion-content">
           <h3>GIFTING KITS</h3>
-          <a href="">SHOP NOW</a>
+          <a href="/products/Gifting">SHOP NOW</a>
         </div>
       </div>
 
@@ -125,7 +126,7 @@
         <img src="./images/stationary.png" alt="" />
         <div class="promotion-content">
           <h3>STATIONARY</h3>
-          <a href="">SHOP NOW</a>
+          <a href="/products/Stationary">SHOP NOW</a>
         </div>
       </div>
     </div>
@@ -198,7 +199,7 @@
               </div>
             </div>
             <div class="bottom">
-              <a href="/productdetail"><%= latest.name %></a>
+              <a href="/productdetail/<%= latest._id %>"><%= latest.name %></a>
               <div class="price">
                 <span>₹<%= latest.price %></span>
               </div>

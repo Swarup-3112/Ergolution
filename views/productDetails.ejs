@@ -37,7 +37,7 @@
             <small class="count d-flex"><%= count %></small>
           </span>
           </a>
-          <span><img src="./images/search.svg" alt="" /></span>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i></a>
         </li>
       </ul>
       <label for="" class="btn open-btn"><i class="fas fa-bars"></i></label>
@@ -55,7 +55,7 @@
       <div class="right">
         <h1><%= products.name %></h1>
         <div class="price-name">
-          <div class="price">$<%= products.price %></div>
+          <div class="price">₹<%= products.price %></div>
           <p class="price">Seller: <%= products.seller %></p>
         </div> 
         <form class="form" action="/additem/<%= products._id %>" method="POST">
