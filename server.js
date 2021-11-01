@@ -63,13 +63,7 @@ app.get("/" , (req,res) => {
 
 //signup post
 app.post("/signup" , async (req,res) => {
-        try{
-            const repass = /(?=^.{8,}$)((?=.\d)|(?=.\W+))(?![.\n])(?=.[A-Z])(?=.[a-z]).*$/;
-            console.log("mi alo")
-            if(!(repass.test(req.body.password))){
-                console.log("checking password")
-                alert("Password contains at least eight characters, including at least one number and includes both lower and uppercase letters and special characters")
-            }   
+        try{ 
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             const user = new User({
                 name : req.body.name,
